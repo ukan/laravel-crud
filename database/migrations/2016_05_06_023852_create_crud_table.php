@@ -16,6 +16,7 @@ class CreateCrudTable extends Migration
             $table->increments('id');
             $table->string('judul');
             $table->text('isi');
+            $table->string('gambar');
         });
 
     }

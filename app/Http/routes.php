@@ -9,7 +9,7 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
-*/
+*/ 
 
 Route::get('/', 'CrudController@index');
 Route::get('/add', 'CrudController@create');
@@ -18,6 +18,3 @@ Route::get('/read/{id}', 'CrudController@show');
 Route::get('/edit/{id}', 'CrudController@edit');
 Route::post('/update/{id}', 'CrudController@update');
 Route::get('/delete/{id}', 'CrudController@destroy');
-Route::get('imageUploadForm', 'ImagesController@upload' );
-Route::post('imageUploadForm', 'ImagesController@store' );
-Route::get('showLists', 'ImagesController@show');

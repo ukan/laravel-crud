@@ -25,23 +25,23 @@
 @section('content')
 
 <div class="section">
-  <form action="{{ url('update', $tampiledit->id) }}" method="POST">
+  <form action="{{ url('update', $tampiledit->id) }}" method="POST" enctype="multipart/form-data">
     {!! csrf_field() !!}
     <div class="row">
           <div class="input-field col s12">
             <input type="text" class="validate" name="judul" value="{{ $tampiledit->judul }}">
-            <label for="title">Judul</label>
+            <label for="title">Name</label>
           </div>
     </div>
       <div class="row">
         <div class="input-field col s12">
           <textarea id="textarea1" class="materialize-textarea" name="isi">{{ $tampiledit->isi }}</textarea>
-          <label for="textarea1">Isi</label>
+          <label for="textarea1">Address</label>
         </div>
       </div>
       <div class="row">
         <div class="col s6">
-            <img src="{{ asset('image/'.$tampiledit->gambar) }}" id="showgambar" style="max-width:200px;max-height:200px;float:left;" />
+            <img src="{{ asset('uploads/image/'.$tampiledit->gambar) }}" id="showgambar" style="max-width:200px;max-height:200px;float:left;" />
         </div>
     </div>
     <div class="row">
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-flat pink accent-3 waves-effect waves-light white-text right">Submit <i class="material-icons right">send</i></button>
+      <button type="submit" class="btn btn-flat blue accent-3 waves-effect waves-light white-text right">Submit <i class="material-icons right">send</i></button>
   </form>
 </div>
 

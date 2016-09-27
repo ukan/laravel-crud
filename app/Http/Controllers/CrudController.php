@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Crud;
 
+use Image; 
+use Illuminate\Support\Facades\File;
+
+use App\Http\Requests\CrudRequest;
+
 class CrudController extends Controller
 {
     /**
@@ -17,6 +22,7 @@ class CrudController extends Controller
     public function index()
     {
         $datas = Crud::orderBy('id', 'DESC')->paginate(3);
+        
         return view('show')->with('datas', $datas);
     }
 
@@ -36,20 +42,34 @@ class CrudController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrudRequest $request)
     {
+        /*$this->validate($request, [
+            'judul' => 'required',
+            'isi' => 'required'
+        ]);*/
 
         $tambah = new Crud();
         $tambah->judul = $request['judul'];
         $tambah->isi = $request['isi'];
-        $tambah->save();
 
-        // Disini proses mendapatkan judul dan memindahkan letak gambar ke folder image
-        $file       = $request->file('gambar');
-        $fileName   = $file->getClientOriginalName();
-        $request->file('gambar')->move("image/", $fileName);
+        if($request->file('gambar')==""){
 
-        $tambah->gambar = $fileName;
+        }else{
+            
+            $GalleryImages = new Crud();
+            // Disini proses mendapatkan judul dan memindahkan letak gambar ke folder image
+           $file = $request->file('gambar');
+           $fileName   = $file->getClientOriginalName();
+           $imageId = $GalleryImages->id;
+           $extension = $request->file('gambar')->getClientOriginalExtension();
+
+           $image = Image::make($file->getRealPath());
+           //save image with thumbnail
+           $image->save(public_path().'/uploads/image/'.$imageId.'-'.$fileName)->resize(200, 300)->save(public_path().'/uploads/image/thumb/'.'thumb-'.$imageId.'-'.$fileName);
+
+           $tambah->gambar=$imageId.'-'.$fileName;
+        }
         $tambah->save();
 
         return redirect()->to('/');
@@ -92,20 +112,21 @@ class CrudController extends Controller
         $update->judul = $request['judul'];
         $update->isi = $request['isi'];
 
-        if($request->file('gambar') == "")
-        {
-            $update->gambar = $update->gambar;
-        } 
-        else
-        {
-            $file       = $request->file('gambar');
-            $fileName   = $file->getClientOriginalName();
-            $request->file('gambar')->move("image/", $fileName);
-            $update->gambar = $fileName;
+        $GalleryImages = Crud::findOrFail($id);
+          if (!empty($request->file('gambar'))){
+
+           $file = $request->file('gambar');
+           $fileName   = $file->getClientOriginalName();
+           $imageId = $GalleryImages->id;
+           $extension = $request->file('gambar')->getClientOriginalExtension();
+
+           $image = Image::make($file->getRealPath());
+           //save image with thumbnail
+           $image->save(public_path().'/uploads/image/'.$imageId.'-'.$fileName)->resize(200, 300)->save(public_path().'/uploads/image/thumb/'.'thumb-'.$imageId.'-'.$fileName);
+            
+            $update->gambar=$imageId.'-'.$fileName;
+            $update->update();
         }
-
-        $update->update();
-
         return redirect()->to('/');
     }
 

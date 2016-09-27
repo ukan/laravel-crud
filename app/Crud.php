@@ -8,6 +8,6 @@ class Crud extends Model
 {
 	protected $table = 'crud';
     protected $primaryKey = 'id';
-    protected $fillable = ['judul', 'isi'];
+    protected $fillable = ['judul', 'isi', 'gambar'];
     public $timestamps = false;
 }
